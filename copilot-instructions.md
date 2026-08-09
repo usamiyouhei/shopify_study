@@ -1,0 +1,1 @@
+/Users/usamiyouhei/Desktop/usami/dev/shopify_study/utsuwa-theme/AGENTS.md
