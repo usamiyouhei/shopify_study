@@ -1,7 +1,19 @@
-<article>
+<article class="product-card">
   {% if product.featured_image %}
     <a href="{{ product.url }}">
-      
+      {{ product.featured_image
+      | image_url: width:600
+      | image_tag }}
     </a>
   {% endif %}
+
+  <h3>
+    <a href="{{ product.url }}">
+      {{ product.title }}
+    </a>
+  </h3>
+
+  <p>
+    {{ product.price | money }}
+  </p>
 </article>
