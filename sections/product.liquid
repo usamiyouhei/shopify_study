@@ -51,6 +51,8 @@
 }
 {% endschema %} {% endcomment %}
 
+{{ 'product.css' | asset_url | stylesheet_tag }}
+
 <section class="product">
   <div class="product__media">
     {% if product.featured_image %}
@@ -74,5 +76,12 @@
     <div class="product__description">
       {{ product.description }}
     </div>
+
+    {% form 'product', product %}
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      <button type="submit">
+        Add to cart
+      </button>
+    {% endform %}
   </div>
 </section>

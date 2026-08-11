@@ -4,4 +4,38 @@
   gap: 64px;
   max-width: 1200px;
   margin: auto;
+  padding: 64px 32px;
+}
+
+.product__media img {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+  object-fit: cover;
+}
+
+.product__info {
+  padding-top: 32px;
+}
+
+.product__title {
+  margin: 0;
+  font-size: 42px;
+}
+
+.product__price {
+  margin-top: 16px;
+  font-size: 20px;
+}
+
+.product__description {
+  margin-top: 32px;
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .product {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
 }
