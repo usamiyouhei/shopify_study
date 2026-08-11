@@ -51,6 +51,8 @@
 }
 {% endschema %} {% endcomment %}
 
+{{ 'product.css' | asset_url | stylesheet_tag }}
+
 <section class="product">
   <div class="product__media">
     {% if product.featured_image %}
