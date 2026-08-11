@@ -1,3 +1,6 @@
+{{ 'product-card.css' | asset_url | stylesheet_tag }}
+
+
 <article class="product-card">
   {% if product.featured_image %}
     <a href="{{ product.url }}">
