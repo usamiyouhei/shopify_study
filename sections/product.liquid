@@ -78,9 +78,38 @@
     </div>
 
     {% form 'product', product %}
-      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-      <button type="submit">
-        Add to cart
+
+      {% assign current_variant = product.selected_or_first_available_variant %}
+      <label for="variant">Variant</label>
+
+      <select name="id" id="variant">
+        {% for variant in product.variants %}
+          <option value="{{ variant.id }}"
+          {% if variant == current_variant %}
+            selected
+            {% endif %}
+            {% unless variant.available %}
+              disabled
+            {% endunless %}
+          >
+          {{ variant.title }} - {{ variant.price | money }}
+          </option>
+          {% endfor %}
+      </select>
+      {% comment %} <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}"> {% endcomment %}
+
+      <label for="quantity">
+        Quantity
+      </label>
+
+      <input id="quantity" type="number" name="quantity" min="1" value="1">
+      <button type="submit" {% unless current_variant.available %}disabled{% endunless %}>
+        {% if current_variant.available %}
+          Add to cart
+        {% else %}
+          Sold out
+        {% endif %}
+
       </button>
     {% endform %}
   </div>
