@@ -1,11 +1,11 @@
-{% comment %}
+{% comment %} 
   This section is used in the product template to render product page with
   media, content, and add-to-cart form.
 
   https://shopify.dev/docs/storefronts/themes/architecture/templates/product
 {% endcomment %}
-
-{% comment %} <div class="product-images">
+{% comment %} 
+<div class="product-images">
   {% for image in product.images %}
     {% render 'image', class: 'product-image', image: image %}
   {% endfor %}
@@ -39,7 +39,7 @@
     <input type="submit" value="Add to cart">
     {{ form | payment_button }}
   {% endform %}
-</div>
+</div> {% endcomment %}
 
 {% schema %}
 {
@@ -49,9 +49,11 @@
     "groups": ["header", "footer"]
   }
 }
-{% endschema %} {% endcomment %}
+{% endschema %}
 
 {{ 'product.css' | asset_url | stylesheet_tag }}
+{% assign current_variant = product.selected_or_first_available_variant %}
+
 
 <section class="product">
   <div class="product__media">
@@ -69,8 +71,8 @@
       {{ product.title }}
     </h1>
 
-    <p class="product__price">
-      {{ product.price | money }}
+    <p class="product__price" id="product-price">
+      {{ current_variant.price | money }}
     </p>
 
     <div class="product__description">
@@ -79,18 +81,21 @@
 
     {% form 'product', product %}
 
-      {% assign current_variant = product.selected_or_first_available_variant %}
       <label for="variant">Variant</label>
 
       <select name="id" id="variant">
         {% for variant in product.variants %}
-          <option value="{{ variant.id }}"
+          <option
+            value="{{ variant.id }}"
+            data-price="{{ variant.price | money }}"
+            data-available="{{ variant.available }}"
           {% if variant == current_variant %}
-            selected
+              selected
             {% endif %}
-            {% unless variant.available %}
+
+            {% comment %} {% unless variant.available %}
               disabled
-            {% endunless %}
+            {% endunless %} {% endcomment %}
           >
           {{ variant.title }} - {{ variant.price | money }}
           </option>
@@ -103,14 +108,16 @@
       </label>
 
       <input id="quantity" type="number" name="quantity" min="1" value="1">
-      <button type="submit" {% unless current_variant.available %}disabled{% endunless %}>
+      <button id="add-to-cart" type="submit" {% unless current_variant.available %}disabled{% endunless %}>
         {% if current_variant.available %}
           Add to cart
         {% else %}
           Sold out
         {% endif %}
-
       </button>
     {% endform %}
   </div>
 </section>
+
+
+<script src="{{ 'product.js' | asset_url }}" defer></script>
