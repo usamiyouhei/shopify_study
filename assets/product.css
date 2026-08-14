@@ -33,6 +33,36 @@
   line-height: 1.7;
 }
 
+.product form {
+  display: grid;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.product select,
+.product input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.product button {
+  padding: 16px 24px;
+  border: 0;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.product button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
   .product {
     grid-template-columns: 1fr;

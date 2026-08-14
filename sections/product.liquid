@@ -83,7 +83,7 @@
 
       <label for="variant">Variant</label>
 
-      <select name="id" id="variant">
+      {% comment %} <select name="id" id="variant">
         {% for variant in product.variants %}
           <option
             value="{{ variant.id }}"
@@ -100,7 +100,21 @@
           {{ variant.title }} - {{ variant.price | money }}
           </option>
           {% endfor %}
-      </select>
+      </select> {% endcomment %}
+      <div class="variant-option">
+        <legend>Size</legend>
+
+        {% for value in product.options_by_name.Size.values %}
+          <button
+            type="button"
+            class="variant-button"
+            data-option="size"
+            data-value="{{ value }}"
+          >
+            {{ value }}
+          </button>
+        {% endfor %}
+      </div>
       {% comment %} <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}"> {% endcomment %}
 
       <label for="quantity">
@@ -121,3 +135,4 @@
 
 
 <script src="{{ 'product.js' | asset_url }}" defer></script>
+<script id="product-variants" type="application/json">{{ product.variants | json }}</script>
