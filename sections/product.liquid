@@ -101,21 +101,39 @@
           </option>
           {% endfor %}
       </select> {% endcomment %}
-      <div class="variant-option">
-        <legend>Size</legend>
+      <div class="variant-options">
+        <fieldset class="variant-group">
+          <legend>Size</legend>
+          {% for value in product.options_by_name.Size.values %}
+            <button
+              type="button"
+              class="variant-button"
+              data-option="size"
+              data-value="{{ value }}"
+            >
+              {{ value }}
+            </button>
+          {% endfor %}
 
-        {% for value in product.options_by_name.Size.values %}
-          <button
-            type="button"
-            class="variant-button"
-            data-option="size"
-            data-value="{{ value }}"
-          >
-            {{ value }}
-          </button>
-        {% endfor %}
+        </fieldset>
+
+        <fieldset class="variant-group">
+          <legend>Color</legend>
+          {% for value in product.options_by_name.Color.values %}
+            <button
+              type="button"
+              class="variant-button"
+              data-option="color"
+              data-value="{value}"
+            >
+              {{ value }}
+            </button>
+          {% endfor %}
+        </fieldset>
+
       </div>
-      {% comment %} <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}"> {% endcomment %}
+      <input type="hidden" name="id" value="{{ current_variant.id }}">
+
 
       <label for="quantity">
         Quantity
