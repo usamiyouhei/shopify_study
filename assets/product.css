@@ -44,18 +44,22 @@
   font-weight: 600;
 }
 
-.variant-button {
+.product .variant-button {
   padding: 10px 18px;
   margin-right: 8px;
 
-  border: 1px solid #ccc;
+  border: 1px solid #bbb;
   border-radius: 999px;
-  background: transparent;
-
+  background: #fff;
+  color: #111;
   cursor: pointer;
+  transition: 0.2s;
+}
+.product .variant-button:hover {
+  border-color: #111;
 }
 
-.variant-button.is-active {
+.product .variant-button.is-active {
   background: #111;
   color: #fff;
   border-color: #111;
