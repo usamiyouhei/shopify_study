@@ -82,25 +82,6 @@
     {% form 'product', product %}
 
       <label for="variant">Variant</label>
-
-      {% comment %} <select name="id" id="variant">
-        {% for variant in product.variants %}
-          <option
-            value="{{ variant.id }}"
-            data-price="{{ variant.price | money }}"
-            data-available="{{ variant.available }}"
-          {% if variant == current_variant %}
-              selected
-            {% endif %}
-
-            {% comment %} {% unless variant.available %}
-              disabled
-            {% endunless %} {% endcomment %}
-          >
-          {{ variant.title }} - {{ variant.price | money }}
-          </option>
-          {% endfor %}
-      </select> {% endcomment %}
       <div class="variant-options">
         <fieldset class="variant-group">
           <legend>Size</legend>
@@ -124,7 +105,7 @@
               type="button"
               class="variant-button"
               data-option="color"
-              data-value="{value}"
+              data-value="{{value}}"
             >
               {{ value }}
             </button>
@@ -132,7 +113,7 @@
         </fieldset>
 
       </div>
-      <input type="hidden" name="id" value="{{ current_variant.id }}">
+      <input type="hidden" id="variant-id" name="id" value="{{ current_variant.id }}">
 
 
       <label for="quantity">
@@ -151,6 +132,6 @@
   </div>
 </section>
 
+<script id="product-variants" type="application/json">{{ product.variants | json }}</script>
 
 <script src="{{ 'product.js' | asset_url }}" defer></script>
-<script id="product-variants" type="application/json">{{ product.variants | json }}</script>

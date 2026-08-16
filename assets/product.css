@@ -33,6 +33,34 @@
   line-height: 1.7;
 }
 
+.variant-group {
+  border: 0;
+  padding: 0;
+  margin: 24px 0;
+}
+
+.variant-group legend {
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.variant-button {
+  padding: 10px 18px;
+  margin-right: 8px;
+
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  background: transparent;
+
+  cursor: pointer;
+}
+
+.variant-button.is-active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
 .product form {
   display: grid;
   gap: 16px;
