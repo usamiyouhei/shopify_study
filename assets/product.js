@@ -10,8 +10,25 @@ const variantIdInput = document.querySelector("#variant-id");
 if (variantDataElement && variantIdInput && productPrice && addToCartButton) {
   const variants = JSON.parse(variantDataElement.textContent);
 
-  let selectedSize = null;
-  let selectedColor = null;
+  const currentVariantId = variantIdInput.value;
+  const currentVariant = variants.find((variant) => {
+    return String(variant.id) === String(currentVariantId);
+  });
+
+  let selectedSize = currentVariant?.options[0] ?? null;
+  let selectedColor = currentVariant?.options[1] ?? null;
+
+  sizeButtons.forEach((button) => {
+    if (button.dataset.value === selectedSize) {
+      button.classList.add("is-active");
+    }
+  });
+
+  colorButtons.forEach((button) => {
+    if (button.dataset.value === selectedColor) {
+      button.classList.add("is-active");
+    }
+  });
 
   // Variant 検索用関数
   function updateVariant() {
@@ -74,6 +91,25 @@ if (variantDataElement && variantIdInput && productPrice && addToCartButton) {
       button.classList.add("is-active");
       updateVariant();
     });
+  });
+}
+
+function updateSizeAvailability() {
+  sizeButtons.forEach((button) => {
+    const size = variants.dataset.value;
+
+    const variant = variants.find((variant) => {
+      return (
+        variant.options[0] === size && variant.options[1] === selectedColor
+      );
+    });
+    if (!variant) return;
+
+    if (variant.available) {
+      button.classList.remove("is-unavailable");
+    } else {
+      button.classList.add("is-available");
+    }
   });
 }
 
