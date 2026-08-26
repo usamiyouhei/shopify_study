@@ -113,6 +113,26 @@ function updateSizeAvailability() {
   });
 }
 
+function updateColorAvailability() {
+  colorButtons.forEach((button) => {
+    const color = button.dataset.value;
+
+    const variant = variants.find((variant) => {
+      return (
+        variant.options[0] === selectedSize && variant.options[1] === color
+      );
+    });
+
+    if (!variant) return;
+
+    if (variant.available) {
+      button.classList.remove("is-unavailable");
+    } else {
+      button.classList.add("is-unavailable");
+    }
+  });
+}
+
 // if (variantSelect && productPrice && addToCartButton) {
 //   variantSelect.addEventListener("change", (event) => {
 //     const selectedOption = event.target.options[event.target.selectedIndex];
