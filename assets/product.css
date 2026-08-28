@@ -95,6 +95,16 @@
   cursor: not-allowed;
 }
 
+.variant-button.is-unavailable {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.variant-button:disabled {
+  pointer-events: none;
+}
+
 @media (max-width: 768px) {
   .product {
     grid-template-columns: 1fr;

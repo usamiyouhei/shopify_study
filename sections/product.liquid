@@ -81,40 +81,33 @@
 
     {% form 'product', product %}
 
-      <label for="variant">Variant</label>
-      <div class="variant-options">
-        <fieldset class="variant-group">
-          <legend>Size</legend>
-          {% for value in product.options_by_name.Size.values %}
-            <button
-              type="button"
-              class="variant-button"
-              data-option="size"
-              data-value="{{ value }}"
-            >
-              {{ value }}
-            </button>
-          {% endfor %}
+     <label>Variant</label>
 
-        </fieldset>
+<div class="variant-options">
+  {% for option in product.options_with_values %}
+    <fieldset class="variant-group">
+      <legend>{{ option.name }}</legend>
 
-        <fieldset class="variant-group">
-          <legend>Color</legend>
-          {% for value in product.options_by_name.Color.values %}
-            <button
-              type="button"
-              class="variant-button"
-              data-option="color"
-              data-value="{{value}}"
-            >
-              {{ value }}
-            </button>
-          {% endfor %}
-        </fieldset>
+      {% for value in option.values %}
+        <button
+          type="button"
+          class="variant-button"
+          data-option="{{ option.name | downcase }}"
+          data-value="{{ value }}"
+        >
+          {{ value }}
+        </button>
+      {% endfor %}
+    </fieldset>
+  {% endfor %}
+</div>
 
-      </div>
-      <input type="hidden" id="variant-id" name="id" value="{{ current_variant.id }}">
-
+<input
+  type="hidden"
+  id="variant-id"
+  name="id"
+  value="{{ current_variant.id }}"
+>
 
       <label for="quantity">
         Quantity
