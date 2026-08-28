@@ -1,6 +1,6 @@
 const sizeButtons = document.querySelectorAll('[data-option="size"]');
 const colorButtons = document.querySelectorAll('[data-option="color"]');
-// const variantSelect = document.querySelector("#variant");
+
 const productPrice = document.querySelector("#product-price");
 const addToCartButton = document.querySelector("#add-to-cart");
 
@@ -11,13 +11,18 @@ if (variantDataElement && variantIdInput && productPrice && addToCartButton) {
   const variants = JSON.parse(variantDataElement.textContent);
 
   const currentVariantId = variantIdInput.value;
+
   const currentVariant = variants.find((variant) => {
     return String(variant.id) === String(currentVariantId);
   });
 
-  let selectedSize = currentVariant?.options[0] ?? null;
-  let selectedColor = currentVariant?.options[1] ?? null;
+  // Shopifyの商品設定
+  // option[0] = Color
+  // option[1] = Size
+  let selectedColor = currentVariant?.options[0] ?? null;
+  let selectedSize = currentVariant?.options[1] ?? null;
 
+  // 初期選択
   sizeButtons.forEach((button) => {
     if (button.dataset.value === selectedSize) {
       button.classList.add("is-active");
@@ -30,14 +35,14 @@ if (variantDataElement && variantIdInput && productPrice && addToCartButton) {
     }
   });
 
-  // Variant 検索用関数
+  // 選択中のVariantを検索
   function updateVariant() {
     if (!selectedSize || !selectedColor) return;
 
     const variant = variants.find((variant) => {
       return (
-        variant.options[0] === selectedSize &&
-        variant.options[1] === selectedColor
+        variant.options[0] === selectedColor &&
+        variant.options[1] === selectedSize
       );
     });
 
@@ -45,107 +50,112 @@ if (variantDataElement && variantIdInput && productPrice && addToCartButton) {
       console.log("Variant not found", {
         selectedSize,
         selectedColor,
-        variants,
       });
+
       return;
     }
+
     variantIdInput.value = variant.id;
 
-    productPrice.textContent = `Dhs.${(variant.price / 100).toFixed(2)}`;
+    productPrice.textContent = `Dhs. ${(variant.price / 100).toFixed(2)}`;
 
     if (variant.available) {
       addToCartButton.disabled = false;
-      addToCartButton.textContent = "Add to Cart";
+      addToCartButton.textContent = "Add to cart";
     } else {
       addToCartButton.disabled = true;
       addToCartButton.textContent = "Sold out";
     }
   }
 
-  // SizeButtonをクリック
+  // Colorを基準にSizeの在庫状況を調べる
+  function updateSizeAvailability() {
+    if (!selectedColor) return;
+
+    sizeButtons.forEach((button) => {
+      const size = button.dataset.value;
+
+      const variant = variants.find((variant) => {
+        return (
+          variant.options[0] === selectedColor && variant.options[1] === size
+        );
+      });
+
+      console.log({
+        selectedColor,
+        size,
+        variant,
+      });
+
+      if (variant?.available) {
+        button.disabled = false;
+        button.classList.remove("is-unavailable");
+      } else {
+        button.disabled = true;
+        button.classList.add("is-unavailable");
+      }
+    });
+  }
+
+  // Sizeを基準にColorの在庫状況を調べる
+  function updateColorAvailability() {
+    colorButtons.forEach((button) => {
+      const color = button.dataset.value;
+
+      const variant = variants.find((variant) => {
+        return (
+          variant.options[0] === color && variant.options[1] === selectedSize
+        );
+      });
+
+      if (variant && variant.available) {
+        button.disabled = false;
+        button.classList.remove("is-unavailable");
+      } else {
+        button.disabled = true;
+        button.classList.add("is-unavailable");
+      }
+    });
+  }
+
+  function updateOptionAvailability() {
+    updateSizeAvailability();
+    // updateColorAvailability();
+  }
+
+  // Sizeボタン
   sizeButtons.forEach((button) => {
     button.addEventListener("click", () => {
       selectedSize = button.dataset.value;
-
-      console.log("size:", selectedSize);
 
       sizeButtons.forEach((item) => {
         item.classList.remove("is-active");
       });
 
       button.classList.add("is-active");
+
       updateVariant();
+      updateOptionAvailability();
     });
   });
 
-  // ColorButtonをクリック
+  // Colorボタン
   colorButtons.forEach((button) => {
     button.addEventListener("click", () => {
       selectedColor = button.dataset.value;
-      console.log("color:", selectedColor);
 
       colorButtons.forEach((item) => {
         item.classList.remove("is-active");
       });
 
       button.classList.add("is-active");
+
       updateVariant();
+      updateOptionAvailability();
     });
   });
+
+  // ページを開いた時にも在庫状態を反映
+  updateVariant();
+  updateOptionAvailability();
 }
-
-function updateSizeAvailability() {
-  sizeButtons.forEach((button) => {
-    const size = variants.dataset.value;
-
-    const variant = variants.find((variant) => {
-      return (
-        variant.options[0] === size && variant.options[1] === selectedColor
-      );
-    });
-    if (!variant) return;
-
-    if (variant.available) {
-      button.classList.remove("is-unavailable");
-    } else {
-      button.classList.add("is-available");
-    }
-  });
-}
-
-function updateColorAvailability() {
-  colorButtons.forEach((button) => {
-    const color = button.dataset.value;
-
-    const variant = variants.find((variant) => {
-      return (
-        variant.options[0] === selectedSize && variant.options[1] === color
-      );
-    });
-
-    if (!variant) return;
-
-    if (variant.available) {
-      button.classList.remove("is-unavailable");
-    } else {
-      button.classList.add("is-unavailable");
-    }
-  });
-}
-
-// if (variantSelect && productPrice && addToCartButton) {
-//   variantSelect.addEventListener("change", (event) => {
-//     const selectedOption = event.target.options[event.target.selectedIndex];
-//     const price = selectedOption.dataset.price;
-//     const available = selectedOption.dataset.available === "true";
-
-//     productPrice.textContent = price;
-
-//     if (available) {
-//       addToCartButton.disabled = false;
-//     } else {
-//       addToCartButton.disabled = true;
-//       addToCartButton.textContent = "Sold out";
-//     }
-//   });
-// }
