@@ -1,5 +1,9 @@
 {
   "emmet.includeLanguages": {
     "liquid": "html"
+  },
+  "editor.formatOnSave": true,
+  "[liquid]": {
+    "editor.defaultFormatter": "Shopify.theme-check-vscode"
   }
 }
