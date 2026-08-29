@@ -1,69 +1,57 @@
-{% comment %} 
+{% comment %}
   This section is used in the product template to render product page with
   media, content, and add-to-cart form.
 
   https://shopify.dev/docs/storefronts/themes/architecture/templates/product
 {% endcomment %}
-{% comment %} 
-<div class="product-images">
-  {% for image in product.images %}
-    {% render 'image', class: 'product-image', image: image %}
-  {% endfor %}
-</div>
 
-<div class="product-info">
-  <h1>{{ product.title }}</h1>
-  <p>{{ product.price | money }}</p>
-  <p>{{ product.description }}</p>
-</div>
+{% comment %}
+  <div class="product-images">
+    {% for image in product.images %}
+      {% render 'image', class: 'product-image', image: image %}
+    {% endfor %}
+  </div>
 
-<div class="product-form">
-  {% form 'product', product %}
-    {% assign current_variant = product.selected_or_first_available_variant %}
+  <div class="product-info">
+    <h1>{{ product.title }}</h1>
+    <p>{{ product.price | money }}</p>
+    <p>{{ product.description }}</p>
+  </div>
 
-    <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
-          {% endif %}
-        >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
-      {% endfor %}
-    </select>
+  <div class="product-form">
+    {% form 'product', product %}
+      {% assign current_variant = product.selected_or_first_available_variant %}
 
-    <input type="text" name="quantity" min="1" value="1">
+      <select name="id">
+        {% for variant in product.variants %}
+          <option
+            value="{{ variant.id }}"
+            {% if variant == current_variant %}
+              selected="selected"
+            {% endif %}
+          >
+            {{ variant.title }} - {{ variant.price | money }}
+          </option>
+        {% endfor %}
+      </select>
 
-    <input type="submit" value="Add to cart">
-    {{ form | payment_button }}
-  {% endform %}
-</div> {% endcomment %}
+      <input type="text" name="quantity" min="1" value="1">
 
-{% schema %}
-{
-  "name": "t:general.product",
-  "settings": [],
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  }
-}
-{% endschema %}
+      <input type="submit" value="Add to cart">
+      {{ form | payment_button }}
+    {% endform %}
+  </div>
+{% endcomment %}
 
 {{ 'product.css' | asset_url | stylesheet_tag }}
-{% assign current_variant = product.selected_or_first_available_variant %}
 
+{% assign current_variant = product.selected_or_first_available_variant %}
 
 <section class="product">
   <div class="product__media">
     {% if product.featured_image %}
-      {{
-        product.featured_image
-        | image_url: width: 1000
-        | image_tag
-      }}
-      {% endif %}
+      {{ product.featured_image | image_url: width: 1000 | image_tag }}
+    {% endif %}
   </div>
 
   <div class="product__info">
@@ -71,7 +59,7 @@
       {{ product.title }}
     </h1>
 
-    <p class="product__price" id="product-price">
+    <p id="product-price" class="product__price">
       {{ current_variant.price | money }}
     </p>
 
@@ -80,41 +68,49 @@
     </div>
 
     {% form 'product', product %}
+      <div class="variant-options">
+        {% for option in product.options_with_values %}
+          <fieldset class="variant-group">
+            <legend>{{ option.name }}</legend>
 
-     <label>Variant</label>
+            {% for value in option.values %}
+              <button
+                type="button"
+                class="variant-button"
+                data-option="{{ option.name | downcase }}"
+                data-value="{{ value }}"
+              >
+                {{ value }}
+              </button>
+            {% endfor %}
+          </fieldset>
+        {% endfor %}
+      </div>
 
-<div class="variant-options">
-  {% for option in product.options_with_values %}
-    <fieldset class="variant-group">
-      <legend>{{ option.name }}</legend>
+      <input
+        id="variant-id"
+        type="hidden"
+        name="id"
+        value="{{ current_variant.id }}"
+      >
 
-      {% for value in option.values %}
-        <button
-          type="button"
-          class="variant-button"
-          data-option="{{ option.name | downcase }}"
-          data-value="{{ value }}"
-        >
-          {{ value }}
-        </button>
-      {% endfor %}
-    </fieldset>
-  {% endfor %}
-</div>
+      <label for="quantity"> Quantity </label>
 
-<input
-  type="hidden"
-  id="variant-id"
-  name="id"
-  value="{{ current_variant.id }}"
->
+      <input
+        id="quantity"
+        type="number"
+        name="quantity"
+        min="1"
+        value="1"
+      >
 
-      <label for="quantity">
-        Quantity
-      </label>
-
-      <input id="quantity" type="number" name="quantity" min="1" value="1">
-      <button id="add-to-cart" type="submit" {% unless current_variant.available %}disabled{% endunless %}>
+      <button
+        id="add-to-cart"
+        type="submit"
+        {% unless current_variant.available %}
+          disabled
+        {% endunless %}
+      >
         {% if current_variant.available %}
           Add to cart
         {% else %}
@@ -125,6 +121,18 @@
   </div>
 </section>
 
-<script id="product-variants" type="application/json">{{ product.variants | json }}</script>
+<script id="product-variants" type="application/json">
+  {{ product.variants | json }}
+</script>
 
 <script src="{{ 'product.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "t:general.product",
+  "settings": [],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}
