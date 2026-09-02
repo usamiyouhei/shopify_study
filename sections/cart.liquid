@@ -16,10 +16,13 @@
             {% render 'image', image: item.image, url: item.url %}
           </div>
           <div class="cart-item__info">
-            <p class="cart-item__title">{{ item.product.title }}</p>
-            <a href="{{ item.url }}">{{ item.product.title }}</a>
+            <h2 class="cart-item__title">
+              <a href="{{ item.url }}">{{ item.product.title }}</a>
+            </h2>
 
-            <p class="cart-item__variant">{{ item.variant.title }}</p>
+            {% unless item.product.has_only_default_variant %}
+              <p class="cart-item__variant">{{ item.variant.title }}</p>
+            {% endunless %}
 
             <p class="cart-item__price">{{ item.final_price | money }}</p>
             {{ 'cart.remove' | t | link_to: item.url_to_remove }}
