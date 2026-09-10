@@ -25,24 +25,49 @@
             {% endunless %}
 
             <p class="cart-item__price">{{ item.final_price | money }}</p>
-            {{ 'cart.remove' | t | link_to: item.url_to_remove }}
-          </div>
-          <div class="cart-item__quantity">
-            <input type="number" name="updates[]" value="{{ item.quantity }}" min="0">
-            <input type="submit" value="{{ 'cart.update' | t }}">
+            <a class="cart-item_remove" href="{{ item.url_to_remove }}">
+              {{ 'cart.remove' | t }}
+            </a>
           </div>
 
-          <div class="cart-item__subtotal">
-            <p>{{ item.final_line_price | money }}</p>
+          <div class="cart-item__actions">
+            <div class="cart-item__quantity">
+              <label for="quantity-{{ item.key }}"> Quantity </label>
+              <input
+                id="quantity-{{ item.key }}"
+                type="number"
+                name="updates[{{ item.key }}]"
+                value="{{ item.quantity }}"
+                min="0"
+              >
+            </div>
+
+            <p class="cart-item__subtotal">
+              <span>Subtotal</span>
+              <strong>{{ item.final_line_price | money }}</strong>
+            </p>
           </div>
         </article>
       {% endfor %}
     </div>
-    <div class="cart-total">
-      <p>Total: {{ cart.total_price | money }}</p>
-    </div>
 
-    <input type="submit" name="checkout" value="{{ 'cart.checkout' | t }}">
+    <div class="footer">
+      <div class="cart-total">
+        <p>Total: {{ cart.total_price | money }}</p>
+      </div>
+
+      <div class="cart__buttons">
+        <button type="submit" name="update" class="cart__update">
+          {{ 'cart.update' | t }}
+        </button>
+
+        <button type="submit" name="checkout" class="cart__checkout">
+          {{ 'cart.checkout' | t }}
+        </button>
+      </div>
+
+      <input type="submit" name="checkout" value="{{ 'cart.checkout' | t }}">
+    </div>
   </form>
 </section>
 
